@@ -61,7 +61,7 @@ extEmailID bigint primary key identity(1,1),
 recipients varchar(512) not null,
 emailSubject varchar(128) not null,
 emailBody varchar(8000) not null, --Max size varchar (UTF-8)
-emailTime int not null,
+emailTime smalldatetime not null,
 sender varchar(50) not null,
 attachmentID bigint null
 )
@@ -71,7 +71,7 @@ extDraftID bigint primary key identity(1,1),
 recipients varchar(512) not null,
 emailSubject varchar(128) not null,
 emailBody varchar(8000) not null, --Max size varchar (UTF-8)
-emailTime int not null,
+emailTime smalldatetime not null,
 sender varchar(50) not null,
 attachmentID bigint null
 )
@@ -89,7 +89,7 @@ isDeleted bit not null
 create table ExtOutbound(
 userID int not null,
 extEmailID bigint not null,
-deliveryTime int null
+deliveryTime smalldatetime null
 )
 
 create table IntInbound(
@@ -103,7 +103,7 @@ isDeleted bit not null
 create table IntOutbound(
 userID int not null,
 intEmailID bigint not null,
-deliveryTime int null
+deliveryTime smalldatetime null
 )
 
 create table InternalEmail(
@@ -111,7 +111,7 @@ intEmailID bigint primary key identity(1,1),
 emailPriority int not null,
 emailSubject varchar(128) not null,
 emailBody varchar(8000) not null, --Max size varchar (UTF-8)
-emailTime int not null,
+emailTime smalldatetime not null,
 categoryID int not null,
 senderID int not null,
 attachmentID bigint null
@@ -122,7 +122,7 @@ intDraftID bigint primary key identity(1,1),
 emailPiority int not null,
 emailSubject varchar(128) not null,
 emailBody varchar(8000) not null, --Max size varchar (UTF-8)
-emailTime int not null,
+emailTime smalldatetime not null,
 categoryID int not null,
 senderID int not null,
 attachmentID bigint null
