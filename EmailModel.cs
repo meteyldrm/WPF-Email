@@ -121,12 +121,6 @@ namespace EmailWPF {
 				.WithRequired(e => e.InternalEmail)
 				.WillCascadeOnDelete(false);
 
-			modelBuilder.Entity<InternalEmail>()
-				.HasMany(e => e.Thread)
-				.WithRequired(e => e.InternalEmail)
-				.HasForeignKey(e => e.internalEmailID)
-				.WillCascadeOnDelete(false);
-
 			modelBuilder.Entity<Recipients>()
 				.HasOptional(e => e.Team)
 				.WithRequired(e => e.Recipients);

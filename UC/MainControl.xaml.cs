@@ -23,12 +23,23 @@ namespace EmailWPF.UC {
 			ComposeFromCB.DropDownOpened += populateFromCB;
 			ComposeCategoryCB.DropDownOpened += populateCategoryCB;
 			ComposeFromNewBTN.Click += clickComposeFromNewBTN;
+			ComposeDiscardBTN.Click += clickComposeDiscardBTN;
+			InboxAccountCB.DropDownOpened += populateAccountCB;
+			InboxAccountCB.DropDownClosed += populateInboxScrollViewer;
 		}
 
 		public event EventHandler<EventArgs> TempLogin;
 
 		private void clickComposeFromNewBTN(object sender, EventArgs e) {
 			TempLogin(this, new EventArgs());
+		}
+
+		private void clickComposeDiscardBTN(object sender, EventArgs e) {
+			ComposeToTB.Text = "";
+			ComposeSubjectTB.Text = "";
+			ComposeCategoryCB.SelectedItem = null;
+			ComposeFromCB.SelectedItem = null;
+			ComposeBodyTB.Text = "";
 		}
 
 		private void populateFromCB(object sender, EventArgs e) {
@@ -52,7 +63,7 @@ namespace EmailWPF.UC {
 		}
 
 		private void populateAccountCB(object sender, EventArgs e) {
-			resetCategoryCB();
+			resetAccountCB();
 			App.Current.users.ForEach(i => InboxAccountCB.Items.Add(i.emailAddress));
 		}
 
@@ -63,6 +74,19 @@ namespace EmailWPF.UC {
 		private void populateInboxScrollViewer(object sender, EventArgs e) {
 			var user = App.Current.users.FirstOrDefault(u => u.emailAddress == InboxAccountCB.Text);
 			List<InternalEmail> ie = new List<InternalEmail>();
+			List<Thread> th = new List<Thread>();
+			using (var em = new EmailModel()) {
+				var a = em.IntInbound.ToList();
+				foreach(var x in a) {
+					if(x.InternalEmail != null) {
+						try {
+							var p = em.InternalEmail.Find(x.InternalEmail);
+							ie.Add(p);
+						} catch(ArgumentOutOfRangeException) { }
+					}
+				}
+			}
+			ie.ForEach(i => InboxEmailDG.Items.Add(i.emailSubject));
 		}
 
 		private void resetInboxScrollViewer() {

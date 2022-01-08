@@ -24,7 +24,7 @@ threadID int not null
 )
 
 create table Thread(
-threadID bigint primary key identity(1,1),
+threadID bigint identity(1,1),
 internalEmailID bigint not null
 )
 
@@ -130,6 +130,7 @@ attachmentID bigint null
 
 alter table UserAddress add constraint TblUserFKuID foreign key (userID) references TblUser(userID)
 
+alter table Thread add constraint ThreadFKthreadID primary key (threadID, internalEmailID)
 alter table Thread add constraint ThreadFKinternalEmailID foreign key (internalEmailID) references InternalEmail(intEmailID)
 
 alter table RecipientUser add constraint RecipientUserPK primary key (userID, recipientID)
@@ -172,3 +173,24 @@ insert into TblUser (userName) values ('John Doe'), ('Jane Doe')
 
 insert into Categories (categoryName) values ('General'), ('Inquiry'), ('Update'), ('Event'), ('News')
 insert into Attachments (attachmentName, attachmentSize, attachmentURI) values ('TestAttachment.zip', '238 KB', 'https://cloud.data.storage/TestAttachment_zip1')
+
+
+
+insert into UserAddress (emailAddress, alias, passwordHash, userID) values ('johndoe@emailprovider.com', 'Personal', '9f735e0df9a1ddc702bf0a1a7b83033f9f7153a00c29de82cedadc9957289b05', 1)
+insert into UserAddress (emailAddress, alias, passwordHash, userID) values ('janedoe@organization.com', 'Work', '0d7a73a5e72468e4dafa3790ede477cc507d838681c5af6d1836e6f0b5f6a1fd', 2)
+insert into UserAddress (emailAddress, alias, passwordHash, userID) values ('johndoe@organization.com', 'Work', '0d7a73a5e72468e4dafa3790ede477cc507d838681c5af6d1836e6f0b5f6a1fd', 1)
+
+insert into Undisclosed values (1)
+insert into InternalEmail (emailPriority,emailSubject,emailBody,emailTime,categoryID,senderID) values (1, 'Test email', 'This is a test email', '1995-12-13 12:43:10', 5, 2)
+insert into InternalEmail (emailPriority,emailSubject,emailBody,emailTime,categoryID,senderID) values (1, 'Anotherest email', 'Yet another test email!', '1995-12-13 12:43:10', 5, 2)
+insert into InternalEmail (emailPriority,emailSubject,emailBody,emailTime,categoryID,senderID) values (1, 'We have finished upgrading', 'we are done!', '1995-12-13 12:43:10', 3, 2)
+insert into Thread (threadID, internalEmailID) values (1, 1)
+set IDENTITY_INSERT Thread ON
+
+insert into Recipients values (1)
+
+insert into RecipientUser values (3, 1)
+
+insert into IntInbound values (3, 3, 0,0,0)
+
+select * from IntInbound

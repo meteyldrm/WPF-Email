@@ -7,12 +7,14 @@ namespace EmailWPF
     using System.Data.Entity.Spatial;
 
     [Table("Thread")]
-    public partial class Thread
-    {
+    public partial class Thread {
+        [Key]
+        [Column(Order = 0)]
         public long threadID { get; set; }
 
+        [Key]
+        [Column(Order = 1)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long internalEmailID { get; set; }
-
-        public virtual InternalEmail InternalEmail { get; set; }
     }
 }
