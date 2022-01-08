@@ -22,6 +22,13 @@ namespace EmailWPF.UC {
 			InitializeComponent();
 			ComposeFromCB.DropDownOpened += populateFromCB;
 			ComposeCategoryCB.DropDownOpened += populateCategoryCB;
+			ComposeFromNewBTN.Click += clickComposeFromNewBTN;
+		}
+
+		public event EventHandler<EventArgs> TempLogin;
+
+		private void clickComposeFromNewBTN(object sender, EventArgs e) {
+			TempLogin(this, new EventArgs());
 		}
 
 		private void populateFromCB(object sender, EventArgs e) {
@@ -42,6 +49,24 @@ namespace EmailWPF.UC {
 
 		private void resetCategoryCB() {
 			ComposeCategoryCB.Items.Clear();
+		}
+
+		private void populateAccountCB(object sender, EventArgs e) {
+			resetCategoryCB();
+			App.Current.users.ForEach(i => InboxAccountCB.Items.Add(i.emailAddress));
+		}
+
+		private void resetAccountCB() {
+			InboxAccountCB.Items.Clear();
+		}
+
+		private void populateInboxScrollViewer(object sender, EventArgs e) {
+			var user = App.Current.users.FirstOrDefault(u => u.emailAddress == InboxAccountCB.Text);
+			List<InternalEmail> ie = new List<InternalEmail>();
+		}
+
+		private void resetInboxScrollViewer() {
+
 		}
 	}
 }

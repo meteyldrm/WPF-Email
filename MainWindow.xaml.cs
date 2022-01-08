@@ -18,6 +18,9 @@ namespace EmailWPF {
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
 	public partial class MainWindow : Window {
+		bool reuseMainControl = false;
+		UC.MainControl mc; 
+
 		public MainWindow() {
 			InitializeComponent();
 			var lc = new UC.LoginControl();
@@ -29,8 +32,29 @@ namespace EmailWPF {
 			BorderMain.Child = new UC.LoginControl();
 		}
 
+		void TempLoginScreen(object sender, EventArgs e) {
+			reuseMainControl = true;
+			var lc = new UC.LoginControl();
+			lc.DoLogin += new EventHandler<EventArgs>(OpenMainScreen);
+			BorderMain.Child = lc;
+		}
+
 		void OpenMainScreen(object sender, EventArgs e) {
-			BorderMain.Child = new UC.MainControl();
+			if (!reuseMainControl) {
+				var x = new UC.MainControl();
+				x.TempLogin += TempLoginScreen;
+				mc = x;
+				BorderMain.Child = x;
+			} else {
+				if(mc != null) {
+					BorderMain.Child = mc;
+				} else {
+					var x = new UC.MainControl();
+					x.TempLogin += TempLoginScreen;
+					mc = x;
+					BorderMain.Child = x;
+				}
+			}
 		}
 	}
 }

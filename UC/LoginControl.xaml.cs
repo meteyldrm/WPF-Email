@@ -33,13 +33,18 @@ namespace EmailWPF.UC {
 			using (var em = new EmailModel()) {
 				var user = em.UserAddress.FirstOrDefault(u => u.emailAddress == LoginEmailTB.Text);
 				if (user != null) {
-					if (user.passwordHash == hash) {
-						if (DoLogin != null) {
-							App.Current.addUser(user);
-							DoLogin(this, new EventArgs());
-						}
+					if(App.Current.users.Exists(u => u.aID == user.aID)) {
+						showMultipleLoginWarning();
 					} else {
-						showWrongCredentials();
+						if (user.passwordHash == hash) {
+							if (DoLogin != null) {
+								App.Current.addUser(user);
+								DoLogin(this, new EventArgs());
+							}
+						}
+						else {
+							showWrongCredentials();
+						}
 					}
 				} else {
 					showWrongCredentials();
@@ -61,6 +66,9 @@ namespace EmailWPF.UC {
 			return Sb.ToString();
 		}
 
+		private void showMultipleLoginWarning() {
+			LoginCredentialsWarningTB.Text = "Cannot log in to an account more than once!";
+		}
 		private void showWrongCredentials() {
 			LoginCredentialsWarningTB.Text = "Wrong email or password!";
 		}
