@@ -4,8 +4,8 @@ using System.Data.Entity;
 using System.Linq;
 
 namespace EmailWPF {
-	public partial class Model1 : DbContext {
-		public Model1()
+	public partial class EmailModel : DbContext {
+		public EmailModel()
 			: base("name=EmailModel") {
 		}
 
