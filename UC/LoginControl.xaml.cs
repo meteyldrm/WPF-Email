@@ -30,26 +30,26 @@ namespace EmailWPF.UC {
 
 		private void LoginActionBTNClick(object sender, RoutedEventArgs e) {
 			var hash = SHA256_hash(LoginPasswordPB.Password);
-			using (var em = new EmailModel()) {
-				var user = em.UserAddress.FirstOrDefault(u => u.emailAddress == LoginEmailTB.Text);
-				if (user != null) {
-					if(App.Current.users.Exists(u => u.aID == user.aID)) {
-						showMultipleLoginWarning();
-					} else {
-						if (user.passwordHash == hash) {
-							if (DoLogin != null) {
-								App.Current.addUser(user);
-								DoLogin(this, new EventArgs());
-							}
-						}
-						else {
-							showWrongCredentials();
-						}
-					}
-				} else {
-					showWrongCredentials();
-				}
-			}
+			// using (var em = new EmailModel()) {
+			// 	var user = em.UserAddress.FirstOrDefault(u => u.emailAddress == LoginEmailTB.Text);
+			// 	if (user != null) {
+			// 		if(App.Current.users.Exists(u => u.aID == user.aID)) {
+			// 			showMultipleLoginWarning();
+			// 		} else {
+			// 			if (user.passwordHash == hash) {
+			// 				if (DoLogin != null) {
+			// 					App.Current.addUser(user);
+			// 					DoLogin(this, new EventArgs());
+			// 				}
+			// 			}
+			// 			else {
+			// 				showWrongCredentials();
+			// 			}
+			// 		}
+			// 	} else {
+			// 		showWrongCredentials();
+			// 	}
+			//}
 		}
 
 		public static String SHA256_hash(string value) {

@@ -53,9 +53,9 @@ namespace EmailWPF.UC {
 
 		private void populateCategoryCB(object sender, EventArgs e) {
 			resetCategoryCB();
-			using (var em = new EmailModel()) {
-				em.Categories.ToList().ForEach(i => ComposeCategoryCB.Items.Add(i.categoryName));
-			}
+			// using (var em = new EmailModel()) {
+			// 	em.Categories.ToList().ForEach(i => ComposeCategoryCB.Items.Add(i.categoryName));
+			// }
 		}
 
 		private void resetCategoryCB() {
@@ -75,17 +75,17 @@ namespace EmailWPF.UC {
 			var user = App.Current.users.FirstOrDefault(u => u.emailAddress == InboxAccountCB.Text);
 			List<InternalEmail> ie = new List<InternalEmail>();
 			List<Thread> th = new List<Thread>();
-			using (var em = new EmailModel()) {
-				var a = em.IntInbound.ToList();
-				foreach(var x in a) {
-					if(x.InternalEmail != null) {
-						try {
-							var p = em.InternalEmail.Find(x.InternalEmail);
-							ie.Add(p);
-						} catch(ArgumentOutOfRangeException) { }
-					}
-				}
-			}
+			// using (var em = new EmailModel()) {
+			// 	var a = em.IntInbound.ToList();
+			// 	foreach(var x in a) {
+			// 		if(x.InternalEmail != null) {
+			// 			try {
+			// 				var p = em.InternalEmail.Find(x.InternalEmail);
+			// 				ie.Add(p);
+			// 			} catch(ArgumentOutOfRangeException) { }
+			// 		}
+			// 	}
+			// }
 			ie.ForEach(i => InboxEmailDG.Items.Add(i.emailSubject));
 		}
 
