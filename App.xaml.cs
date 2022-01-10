@@ -13,47 +13,44 @@ namespace EmailWPF {
 	/// Interaction logic for App.xaml
 	/// </summary>
 	public partial class App : Application {
-		public static new App Current => Application.Current as App;
+		public new static App Current => Application.Current as App;
+		public int? threadReply = null;
+		public List<int> activeThreads = new List<int>();
+		public List<long> activeThreadEmails = new List<long>();
 
 		private void App_Startup(object sender, StartupEventArgs e) {
 			MainWindow w = new MainWindow();
 			w.Show();
-			// using (var em = new EmailModel()) {
-			// 	em.TblUser.Where(i => i.userID < 0).ToList();
-			// }
+		}
+
+		public List<DataRow> users = new List<DataRow>();
+		public void addUser(DataRow user) {
+			users.Add(user);
+		}
+		
+		public SqlConnection getSqlConnection(string source = "MAVERICK", string database = "EmailDB") {
+			string connStr = $"data source={source};initial catalog={database};persist security info=True;user id=virtualLogin;password=virtualPassword;MultipleActiveResultSets=True";
+
+			return new SqlConnection(connStr);
+		}
+
+		public DataSet getDataSetForQuery(string Query) {
+			string[] sep = Query.Split(' ');
+			//Extract table from query
+			string table = sep.GetValue(Array.FindIndex(sep, t => t.Equals("from", StringComparison.InvariantCultureIgnoreCase)) + 1).ToString();
 			
-			//string connStr = "server=localhost;user=root;database="+ SelectedItemTextDatabase+";port=3306;password=test32";
-			string connStr = "data source=MAVERICK;initial catalog=EmailDB;persist security info=True;user id=virtualLogin;password=virtualPassword;MultipleActiveResultSets=True";
-
-
-			SqlConnection conn = new SqlConnection(connStr);
-			
-			string sql = "SELECT * FROM "+"TblUser";
-
-			SqlCommand myCommand = new SqlCommand(sql, conn);
-
-			conn.Open();
-			SqlDataReader myReader;
-			myReader = myCommand.ExecuteReader();
-			try
-			{
-				while (myReader.Read())
-				{
-					Console.WriteLine(myReader.GetValue(0).ToString() + " " + myReader.GetValue(1).ToString());
-				}
+			var conn = getSqlConnection();
+			var ds = new DataSet(table);
+			try {
+				var da = new SqlDataAdapter(Query, conn);
+				da.Fill(ds, table);
 			}
 			finally
 			{
-				myReader.Close();
 				conn.Close();
 			}
-		}
 
-		public List<UserAddress> users = new List<UserAddress>();
-		public void addUser(UserAddress addr) {
-			users.Add(addr);
+			return ds;
 		}
-		
-		
 	}
 }

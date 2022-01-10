@@ -1,24 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Security.Cryptography;
 
 namespace EmailWPF.UC {
 	/// <summary>
 	/// Interaction logic for LoginControl.xaml
 	/// </summary>
-	public partial class LoginControl : UserControl {
+	public partial class LoginControl {
 		public LoginControl() {
 			InitializeComponent();
 			LoginActionBTN.Click += LoginActionBTNClick;
@@ -30,36 +20,34 @@ namespace EmailWPF.UC {
 
 		private void LoginActionBTNClick(object sender, RoutedEventArgs e) {
 			var hash = SHA256_hash(LoginPasswordPB.Password);
-			// using (var em = new EmailModel()) {
-			// 	var user = em.UserAddress.FirstOrDefault(u => u.emailAddress == LoginEmailTB.Text);
-			// 	if (user != null) {
-			// 		if(App.Current.users.Exists(u => u.aID == user.aID)) {
-			// 			showMultipleLoginWarning();
-			// 		} else {
-			// 			if (user.passwordHash == hash) {
-			// 				if (DoLogin != null) {
-			// 					App.Current.addUser(user);
-			// 					DoLogin(this, new EventArgs());
-			// 				}
-			// 			}
-			// 			else {
-			// 				showWrongCredentials();
-			// 			}
-			// 		}
-			// 	} else {
-			// 		showWrongCredentials();
-			// 	}
-			//}
+			var dsAddress = App.Current.getDataSetForQuery($"select top 1 * from UserAddress as u where u.emailAddress = '{LoginEmailTB.Text}'");
+			var dsAddressTable = dsAddress.Tables["UserAddress"];
+			if (dsAddressTable.Rows.Count > 0) {
+				if (App.Current.users.Exists(i => i["aID"] == dsAddressTable.Rows[0]["aID"])) {
+					showMultipleLoginWarning();
+				} else {
+					if ((string)dsAddressTable.Rows[0]["passwordHash"] == hash) {
+						if (DoLogin != null) {
+							App.Current.addUser(dsAddressTable.Rows[0]);
+							DoLogin(this, EventArgs.Empty);
+						}
+					} else {
+						showWrongCredentials();
+					}
+				}
+			} else {
+				showWrongCredentials();
+			}
 		}
 
-		public static String SHA256_hash(string value) {
-			StringBuilder Sb = new StringBuilder();
+		private static string SHA256_hash(string value) {
+			var Sb = new StringBuilder();
 
 			using (var hash = SHA256.Create()) {
-				Encoding enc = Encoding.UTF8;
-				byte[] result = hash.ComputeHash(enc.GetBytes(value));
+				var enc = Encoding.UTF8;
+				var result = hash.ComputeHash(enc.GetBytes(value));
 
-				foreach (byte b in result)
+				foreach (var b in result)
 					Sb.Append(b.ToString("x2"));
 			}
 
@@ -74,6 +62,11 @@ namespace EmailWPF.UC {
 		}
 		private void hideWrongCredentials(object sender, RoutedEventArgs e) {
 			LoginCredentialsWarningTB.Text = "";
+		}
+
+		public void doInitializationSequence() {
+			LoginEmailTB.Text = "johndoe@emailprovider.com";
+			LoginPasswordPB.Password = "testpassword";
 		}
 	}
 }

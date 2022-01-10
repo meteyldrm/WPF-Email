@@ -26,6 +26,7 @@ namespace EmailWPF {
 			var lc = new UC.LoginControl();
 			lc.DoLogin += new EventHandler<EventArgs>(OpenMainScreen);
 			BorderMain.Child = lc;
+			lc.doInitializationSequence();
 		}
 
 		void OpenLoginScreen(object sender, EventArgs e) {
@@ -40,20 +41,13 @@ namespace EmailWPF {
 		}
 
 		void OpenMainScreen(object sender, EventArgs e) {
-			if (!reuseMainControl) {
+			if(mc != null || reuseMainControl) {
+				BorderMain.Child = mc;
+			} else {
 				var x = new UC.MainControl();
 				x.TempLogin += TempLoginScreen;
 				mc = x;
 				BorderMain.Child = x;
-			} else {
-				if(mc != null) {
-					BorderMain.Child = mc;
-				} else {
-					var x = new UC.MainControl();
-					x.TempLogin += TempLoginScreen;
-					mc = x;
-					BorderMain.Child = x;
-				}
 			}
 		}
 	}
