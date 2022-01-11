@@ -3,6 +3,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace EmailWPF.UC {
 	/// <summary>

@@ -12,7 +12,7 @@
 			<ColumnDefinition Width="0*"/>
 		</Grid.ColumnDefinitions>
 		<DockPanel Grid.RowSpan="2">
-			<TabControl HorizontalAlignment="Stretch" 
+			<TabControl x:Name="MainTabControl" HorizontalAlignment="Stretch" 
                 VerticalAlignment="Stretch" MinWidth="600" MinHeight="400">
 				<TabItem Header="Compose">
 					<Grid>
@@ -59,32 +59,40 @@
 
 						<TextBox Name="ComposeBodyTB" Margin="5" Grid.Row="4"/>
 						<Grid Grid.Row="5" MinHeight="30">
-							<Button Content="Discard" Name="ComposeDiscardBTN" Width="100" Height="30" HorizontalAlignment="Left" Margin="5,0" />
-							<Button Content="Send" Name="ComposeSendBTN" Width="100" Height="30" HorizontalAlignment="Right" Margin="0,0,5,0" />
+							<Button Content="Discard" Name="ComposeDiscardBTN" Width="100" Height="30" HorizontalAlignment="Left" Margin="5,0, 5, 0" />
+							<Button Content="Send" Name="ComposeSendBTN" Width="100" Height="30" HorizontalAlignment="Right" Margin="5,0,5,0" />
 						</Grid>
 					</Grid>
 				</TabItem>
 				<TabItem Header="Inbox">
 					<Grid Margin="5">
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition MinWidth="140" MaxWidth="140" Width="35*"/>
-							<ColumnDefinition Width="43*"/>
-							<ColumnDefinition Width="118*"/>
+							<ColumnDefinition MinWidth="140" MaxWidth="140" Width="140*"/>
+							<ColumnDefinition Width="180*" MinWidth="140" MaxWidth="220"/>
+							<ColumnDefinition Width="280*" MinWidth="220" MaxWidth="280"/>
+							<ColumnDefinition Width="240*" MinWidth="180"/>
 						</Grid.ColumnDefinitions>
 						<Grid.RowDefinitions>
-							<RowDefinition Height="*" MinHeight="30" MaxHeight="30"/>
-							<RowDefinition Height="196*"/>
+							<RowDefinition Height="30*" MinHeight="30" MaxHeight="30"/>
+							<RowDefinition Height="30*" MinHeight="30" MaxHeight="30"/>
+							<RowDefinition Height="320*"/>
+							<RowDefinition Height="37*"/>
 						</Grid.RowDefinitions>
 						<TextBlock Text="Inbox for account: " FontSize="14" Grid.Column="0" Margin="5"/>
 						<ComboBox x:Name="InboxAccountCB" Grid.Row="0" Grid.Column="1" Margin="5"/>
-						<ScrollViewer Grid.Column="0" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+						<TextBlock Text="Thread" Grid.Column="0" Grid.Row="1" Grid.RowSpan="1" Margin="10,5,0,4" VerticalAlignment="Center"/>
+						<ScrollViewer Grid.Column="0" Grid.Row="2" VerticalScrollBarVisibility="Auto" Grid.RowSpan="2">
 							<ListBox x:Name="InboxThreadDG" Grid.Column="0" Grid.Row="1" Margin="5,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 						</ScrollViewer>
-						<ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+						<TextBlock Text="Subject" Grid.Column="1" Grid.Row="1" Grid.RowSpan="1" Margin="10,5,0,4" VerticalAlignment="Center"/>
+						<ScrollViewer Grid.Column="1" Grid.Row="2" VerticalScrollBarVisibility="Auto" Grid.RowSpan="2">
 							<ListBox x:Name="InboxThreadEmailDG" Margin="5,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 						</ScrollViewer>
-						<ScrollViewer Grid.Column="2" Grid.Row="1" VerticalScrollBarVisibility="Auto">
-							<ItemsControl x:Name="InboxEmailDG" Margin="5,0, 0, 0" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+						<TextBlock x:Name="InboxEmailFromField" Text="" Grid.Column="2" Grid.Row="1" Margin="10,5,0,4" VerticalAlignment="Center"/>
+						<TextBlock x:Name="InboxEmailCategoryField" Text="" Grid.Column="3" Grid.Row="1" Margin="10,5,0,4" VerticalAlignment="Center"/>
+						<Button x:Name="InboxEmailReplyBTN" Content="Reply" HorizontalAlignment="Right" MinWidth="60" MaxWidth="80" MaxHeight="40" Grid.Column="3" Grid.Row="3" Margin="20, 5, 20, 0" Visibility="Hidden"/>
+						<ScrollViewer Grid.Column="2" Grid.Row="2" VerticalScrollBarVisibility="Auto" Grid.RowSpan="1" Grid.ColumnSpan="2">
+							<ListBox x:Name="InboxEmailDG" Margin="5,0, 0, 0" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 						</ScrollViewer>
 
 					</Grid>

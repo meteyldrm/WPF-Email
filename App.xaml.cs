@@ -14,9 +14,11 @@ namespace EmailWPF {
 	/// </summary>
 	public partial class App : Application {
 		public new static App Current => Application.Current as App;
-		public int? threadReply = null;
+		public string currentUserEmailAddress = "";
 		public List<int> activeThreads = new List<int>();
 		public List<long> activeThreadEmails = new List<long>();
+		public long? activeRecipients = null;
+		public long? activeThread = null;
 
 		private void App_Startup(object sender, StartupEventArgs e) {
 			MainWindow w = new MainWindow();
@@ -26,6 +28,7 @@ namespace EmailWPF {
 		public List<DataRow> users = new List<DataRow>();
 		public void addUser(DataRow user) {
 			users.Add(user);
+			currentUserEmailAddress = user["emailAddress"].ToString();
 		}
 		
 		public SqlConnection getSqlConnection(string source = "MAVERICK", string database = "EmailDB") {
@@ -34,7 +37,7 @@ namespace EmailWPF {
 			return new SqlConnection(connStr);
 		}
 
-		public DataSet getDataSetForQuery(string Query) {
+		public DataSet getDataSetForQuery(string Query, bool remainOpen = false) {
 			string[] sep = Query.Split(' ');
 			//Extract table from query
 			string table = sep.GetValue(Array.FindIndex(sep, t => t.Equals("from", StringComparison.InvariantCultureIgnoreCase)) + 1).ToString();
@@ -47,10 +50,22 @@ namespace EmailWPF {
 			}
 			finally
 			{
-				conn.Close();
+				if(!remainOpen) conn.Close();
 			}
 
 			return ds;
+		}
+		
+		public void executeVoidQuery(string Query, bool remainOpen = false) {
+			var conn = getSqlConnection();
+			try {
+				SqlCommand command = new SqlCommand(Query, conn);
+				command.ExecuteNonQuery();
+			}
+			finally
+			{
+				if(!remainOpen) conn.Close();
+			}
 		}
 	}
 }
