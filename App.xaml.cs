@@ -42,6 +42,10 @@ namespace EmailWPF {
 		}
 
 		public DataSet getDataSetForQuery(string Query, bool remainOpen = false) {
+			if (Query == "") {
+				var conn = getSqlConnection();
+				if(!remainOpen) conn.Close();
+			}
 			string[] sep = Query.Split(' ');
 			//Extract table from query
 			string table = sep.GetValue(Array.FindIndex(sep, t => t.Equals("from", StringComparison.InvariantCultureIgnoreCase)) + 1).ToString();
@@ -65,6 +69,10 @@ namespace EmailWPF {
 		}
 		
 		public void executeVoidQuery(string Query, bool remainOpen = false) {
+			if (Query == "") {
+				var conn = getSqlConnection();
+				if(!remainOpen) conn.Close();
+			}
 			try {
 				var conn = getSqlConnection();
 				try {
