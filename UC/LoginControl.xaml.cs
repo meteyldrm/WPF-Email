@@ -24,7 +24,7 @@ namespace EmailWPF.UC {
 			var dsAddress = App.Current.getDataSetForQuery($"select top 1 * from UserAddress as u where u.emailAddress = '{LoginEmailTB.Text}'");
 			var dsAddressTable = dsAddress.Tables["UserAddress"];
 			if (dsAddressTable.Rows.Count > 0) {
-				if (App.Current.users.Exists(i => i["aID"] == dsAddressTable.Rows[0]["aID"])) {
+				if (App.Current.users.Exists(i => i["addressID"] == dsAddressTable.Rows[0]["addressID"])) {
 					showMultipleLoginWarning();
 				} else {
 					if ((string)dsAddressTable.Rows[0]["passwordHash"] == hash) {

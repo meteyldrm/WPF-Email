@@ -1,27 +1,27 @@
-namespace EmailWPF
+namespace EmailWPF.Models
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    [Table("ExtOutbound")]
-    public partial class ExtOutbound
+    public partial class UserEmails
     {
         [Key]
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int userID { get; set; }
+        public int addressID { get; set; }
 
         [Key]
         [Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public long extEmailID { get; set; }
+        public long emailID { get; set; }
 
-        [Column(TypeName = "smalldatetime")]
-        public DateTime? deliveryTime { get; set; }
+        public bool isRead { get; set; }
 
-        public virtual ExternalEmail ExternalEmail { get; set; }
+        public bool isArchived { get; set; }
+
+        public bool isDeleted { get; set; }
+
+        public virtual Email Email { get; set; }
 
         public virtual UserAddress UserAddress { get; set; }
     }

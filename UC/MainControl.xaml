@@ -26,15 +26,19 @@
 						</Grid.RowDefinitions>
 						<Grid Margin="5" Grid.Row="1">
 							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="9*" MinWidth="70" MaxWidth="70"/>
-								<ColumnDefinition Width="30*" MinWidth="200"/>
-								<ColumnDefinition Width="59*"/>
+								<ColumnDefinition Width="35*" MinWidth="70" MaxWidth="70"/>
+								<ColumnDefinition Width="100*" MinWidth="200"/>
+								<ColumnDefinition Width="40*" MinWidth="40"/>
+								<ColumnDefinition Width="45*" MinWidth="90" MaxWidth="90"/>
+								<ColumnDefinition Width="154*" MinWidth="150"/>
 							</Grid.ColumnDefinitions>
-							<TextBlock Text="From" HorizontalAlignment="Left" Grid.Column="0"/>
+							<TextBlock Text="From" HorizontalAlignment="Left" Grid.Column="0" Width="27"/>
 							<ComboBox Name="ComposeFromCB" Grid.Column="1"/>
-							<Button Name="ComposeFromNewBTN" Grid.Column="2" MaxWidth="25" MinWidth="25" MaxHeight="20" MinHeight="20" HorizontalAlignment="Left" Margin="10,0,0,0">
+							<Button Name="ComposeFromNewBTN" Grid.Column="2" MaxWidth="25" MinWidth="25" MaxHeight="20" MinHeight="20" HorizontalAlignment="Left" Margin="10,0,0,0" Width="25">
 								<TextBlock FontSize="16" Text = "+" Padding="0,0,0,3" VerticalAlignment="Center"/>
 							</Button>
+							<TextBlock Text="Thread Name" HorizontalAlignment="Left" Grid.Column="3" Width="72"/>
+							<TextBox x:Name="ComposeThreadNameTB" Grid.Column="4"/>
 						</Grid>
 						<Grid Margin="5" Grid.Row="2">
 							<Grid.ColumnDefinitions>

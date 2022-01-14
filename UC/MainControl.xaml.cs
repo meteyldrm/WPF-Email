@@ -71,7 +71,7 @@ namespace EmailWPF.UC {
 
 		private void populateCategoryCB(object sender, EventArgs e) {
 			resetCategoryCB();
-			foreach (DataRow row in App.Current.getDataSetForQuery("select * from Categories").Tables["Categories"].Rows) {
+			foreach (DataRow row in App.Current.getDataSetForQuery("select * from Categories").Tables["Category"].Rows) {
 				ComposeCategoryCB.Items.Add(row["categoryName"]);
 			}
 		}

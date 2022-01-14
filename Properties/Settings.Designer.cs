@@ -26,7 +26,7 @@ namespace EmailWPF.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=MAVERICK;Initial Catalog=EmailDB;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=MAVERICK;Initial Catalog=EmailDB_301;Integrated Security=True")]
         public string EmailDBConnectionString {
             get {
                 return ((string)(this["EmailDBConnectionString"]));

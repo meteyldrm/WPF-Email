@@ -1,20 +1,19 @@
-namespace EmailWPF
+namespace EmailWPF.Models
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public partial class Categories
+    [Table("Category")]
+    public partial class Category
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Categories()
+        public Category()
         {
-            InternalDraft = new HashSet<InternalDraft>();
-            InternalEmail = new HashSet<InternalEmail>();
+            Email = new HashSet<Email>();
         }
 
-        [Key]
         public int categoryID { get; set; }
 
         [Required]
@@ -22,9 +21,6 @@ namespace EmailWPF
         public string categoryName { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<InternalDraft> InternalDraft { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<InternalEmail> InternalEmail { get; set; }
+        public virtual ICollection<Email> Email { get; set; }
     }
 }
