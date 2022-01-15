@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EmailWPF"
         mc:Ignorable="d"
+        Icon="Icon/icons8-send-email-48.ico"
         Title="Email Portal" Height="450" Width="800">
 	<Border Name="BorderMain" Margin="5"/>
 </Window>

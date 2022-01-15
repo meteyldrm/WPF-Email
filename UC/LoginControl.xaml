@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:EmailWPF.UC"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-	<Grid >
+	<Grid Background="AliceBlue">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="73*"/>
 			<RowDefinition Height="*" MinHeight="25"/>
@@ -25,7 +25,7 @@
 			<TextBlock Text="Password" Width="100" FontSize="18" Foreground="Black" />
 			<PasswordBox MinWidth="300" MaxWidth="300" FontSize="16" Name="LoginPasswordPB"/>
 		</StackPanel>
-		<Button Content="Login" MinHeight="30" MaxHeight="30" Name="LoginActionBTN" Grid.Row="5" HorizontalAlignment="Center" MinWidth="100"/>
+		<Button Content="Login" MinHeight="30" MaxHeight="30" Name="LoginActionBTN" Grid.Row="5" HorizontalAlignment="Center" MinWidth="100" Background="DeepSkyBlue"/>
 		<TextBlock x:Name="LoginCredentialsWarningTB" HorizontalAlignment="Center" Grid.Row="6" TextWrapping="NoWrap" FontSize="16" Text="" VerticalAlignment="Top" Foreground="#FFE83321" Margin="0,30,0,0"/>
 	</Grid>
 </UserControl>

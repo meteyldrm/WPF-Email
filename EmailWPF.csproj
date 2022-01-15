@@ -120,6 +120,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Icon\icons8-send-email-48.ico" />
     <Content Include="obj\Debug\EmailWPF.csproj.CoreCompileInputs.cache" />
     <Content Include="obj\Debug\EmailWPF.csproj.GenerateResource.cache" />
     <Content Include="obj\Debug\EmailWPF.exe" />

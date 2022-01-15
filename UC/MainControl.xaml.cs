@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -20,16 +21,23 @@ namespace EmailWPF.UC {
 			ComposeDiscardBTN.Click += clickComposeDiscardBTN;
 			ComposeSendBTN.Click += clickComposeSendBTN;
 			InboxAccountCB.DropDownOpened += populateAccountCB;
-			InboxAccountCB.DropDownClosed += populateInboxThreadScrollViewer;
-			InboxThreadDG.SelectionMode = SelectionMode.Single;
-			InboxThreadDG.SelectionChanged += populateInboxThreadEmailScrollViewer;
-			InboxThreadEmailDG.SelectionMode = SelectionMode.Single;
-			InboxThreadEmailDG.SelectionChanged += populateInboxEmailScrollViewer;
-			InboxEmailReplyBTN.Click += doReply;
+			// InboxAccountCB.DropDownClosed += populateInboxThreadScrollViewer;
+			// InboxThreadDG.SelectionMode = SelectionMode.Single;
+			// InboxThreadDG.SelectionChanged += populateInboxThreadEmailScrollViewer;
+			// InboxThreadEmailDG.SelectionMode = SelectionMode.Single;
+			// InboxThreadEmailDG.SelectionChanged += populateInboxEmailScrollViewer;
+			// InboxEmailReplyBTN.Click += doReply;
+			
+			List<string> _t = new List<string>{"Email Portal is Live", "Team Assignments", "Library Mobile Client Project", "Library Server Project", "Happy Hour on Friday"};
+			foreach (var VARIABLE in _t) {
+				InboxThreadDG.Items.Add(VARIABLE);
+			}
+			List<string> _te = new List<string>{"Email Portal v1 is available", "Multi-account login feature added", "Would you like extra categories?", "New categories are added"};
+			foreach (var VARIABLE in _te) {
+				InboxThreadEmailDG.Items.Add(VARIABLE);
+			}
 
-			ComposeFromCB.SelectedItem = App.Current.currentUserEmailAddress;
-			InboxAccountCB.SelectedItem = App.Current.currentUserEmailAddress;
-			populateInboxThreadScrollViewer(this, EventArgs.Empty);
+			InboxEmailDG.Text = "There's a new multi-account login functionality which allows you to use multiple accounts at the same time. If you would like a different email address for another team, contact the IT department.";
 		}
 
 		public event EventHandler<EventArgs> TempLogin;
@@ -47,8 +55,12 @@ namespace EmailWPF.UC {
 		}
 
 		private void clickComposeSendBTN(object sender, EventArgs e) {
-			sendEmail(App.Current.currentUserEmailAddress, ComposeToTB.Text, ComposeSubjectTB.Text, ComposeCategoryCB.SelectedItem.ToString(),ComposeBodyTB.Text, App.Current.activeThread.GetValueOrDefault());
-			App.Current.executeVoidQuery(""); //Close connection
+			sendEmail(App.Current.currentUserEmailAddress, 
+				ComposeToTB.Text, ComposeSubjectTB.Text,
+				ComposeCategoryCB.SelectedItem.ToString(),ComposeBodyTB.Text,
+				App.Current.activeThread.GetValueOrDefault(), ComposeThreadNameTB.Text);
+			
+			
 		}
 
 		private void populateFromCB(object sender, EventArgs e) {
@@ -115,6 +127,7 @@ namespace EmailWPF.UC {
 				App.Current.activeThreadEmails.Add((long)row["emailID"]);
 				App.Current.activeThread = App.Current.activeThreads[InboxThreadDG.SelectedIndex];
 			}
+
 		}
 		
 		private void resetInboxThreadEmailScrollViewer() {
@@ -128,7 +141,7 @@ namespace EmailWPF.UC {
 			resetInboxEmailScrollViewer();
 			var ds = _retrieveEmail(App.Current.activeThreadEmails[InboxThreadEmailDG.SelectedIndex]);
 			var email = ds.Tables["Email"].Rows[0];
-			InboxEmailDG.Items.Add(email["emailBody"]);
+			InboxEmailDG.Text = email["emailBody"].ToString();
 			var s = _retrieveUserData((int)email["senderID"]);
 			InboxEmailFromField.Text = $"From: {s.Tables["UserAddress"].Rows[0]["emailAddress"]}";
 			var c = _retrieveCategoryData((int)email["categoryID"]);
@@ -137,7 +150,7 @@ namespace EmailWPF.UC {
 		}
 		
 		private void resetInboxEmailScrollViewer() {
-			InboxEmailDG.Items.Clear();
+			InboxEmailDG.Text = "";
 			InboxEmailFromField.Text = "";
 			InboxEmailCategoryField.Text = "";
 			InboxEmailReplyBTN.Visibility = Visibility.Hidden;
@@ -155,6 +168,11 @@ namespace EmailWPF.UC {
 			
 			//Get selected email
 			var email = ds.Tables["Email"].Rows[0];
+
+			App.Current.activeThread = (int)email["threadID"];
+
+			ComposeThreadNameTB.Text = App.Current.getDataSetForQuery($"select threadName as threadName from Thread where threadID = {(int)email["threadID"]}").Tables["Thread"].Rows[0]["threadName"].ToString();
+			ComposeThreadNameTB.IsEnabled = false;
 			
 			//Get email addresses from recipient group
 			var dsUserAccount = App.Current.getDataSetForQuery($"select emailAddress as emailAddress from UserAddress inner join UserEmails UE on UserAddress.addressID = UE.addressID where UE.emailID = {email.Table.Rows[0]["emailID"]}");
@@ -206,21 +224,29 @@ namespace EmailWPF.UC {
 
 		private void sendEmail(string from, string recipients, string subject, string category, string body, long threadID = -1, string threadName = "") {
 			if (threadID == -1) {
-				App.Current.executeVoidQuery($"insert into Thread (threadName, threadStartTime) values ({threadName},{DateTime.Now})");
-				threadID = (long)App.Current.getDataSetForQuery("select max(threadID) from Thread").Tables["Thread"].Rows[0]["threadID"];
+				App.Current.executeVoidQuery($"insert into Thread (threadName, threadStartTime) values ('{threadName}','{DateTime.Now}')");
+				threadID = (long)App.Current.getDataSetForQuery("select max(threadID) as threadID from Thread").Tables["Thread"].Rows[0]["threadID"];
 			}
 			
 			//Create InternalEmail
-			int cID = (int)App.Current.getDataSetForQuery($"select categoryID as categoryID from Category where categoryName = {category}").Tables["Category"].Rows[0]["categoryID"];
-			int uID = (int)App.Current.getDataSetForQuery($"select addressID as addressID from UserAddress where emailAddress = {from}").Tables["UserAddress"].Rows[0]["addressID"];
-			App.Current.executeVoidQuery($"insert into Email (priority, subject, body, composeTime, categoryID, senderID, threadID, isDraft) values (1, {subject}, {body}, {DateTime.Now}, {cID}, {uID}, {threadID}, {false})");
-			var emailID = (long)App.Current.getDataSetForQuery("select max(emailID) as emailID from Email").Tables["Email"].Rows[0]["emailID"];
+			int cID = (int)App.Current.getDataSetForQuery($"select categoryID as categoryID from Category where categoryName = '{category}'").Tables["Category"].Rows[0]["categoryID"];
+			int uID = (int)App.Current.getDataSetForQuery($"select addressID as addressID from UserAddress where emailAddress = '{from}'").Tables["UserAddress"].Rows[0]["addressID"];
+			App.Current.executeVoidQuery($"insert into Email (priority, subject, body, composeTime, categoryID, senderID, threadID, isDraft) values (1, '{subject}', '{body}', '{DateTime.Now}', {cID}, {uID}, {threadID}, {false})");
+			
+			long emailID;
+			try {
+				emailID = (long)App.Current.getDataSetForQuery("select max(emailID) as emailID from Email").Tables["Email"].Rows[0]["emailID"]; //Null throws cast exception
+			} catch (InvalidCastException e) {
+				emailID = 1;
+			}
+			
 			
 			//Split array overload
 			foreach (var recipient in recipients.Split(new []{"; "}, StringSplitOptions.None)) {
-				long rUID = (long)App.Current.getDataSetForQuery($"select addressID as addressID from UserAddress where emailAddress = {recipient}").Tables["UserAddress"].Rows[0]["addressID"];
+				int rUID = (int)App.Current.getDataSetForQuery($"select addressID as addressID from UserAddress where emailAddress = '{recipient}'").Tables["UserAddress"].Rows[0]["addressID"];
 				App.Current.executeVoidQuery($"insert into UserEmails values ({rUID}, {emailID}, {false}, {false}, {false})", true);
 			}
+			App.Current.executeVoidQuery(""); //Close connection
 		}
 	}
 }

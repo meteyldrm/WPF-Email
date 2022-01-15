@@ -33,11 +33,11 @@ namespace EmailWPF.UC {
 							DoLogin(this, EventArgs.Empty);
 						}
 					} else {
-						showWrongCredentials();
+						showWrongCredentialsWarning();
 					}
 				}
 			} else {
-				showWrongCredentials();
+				showWrongCredentialsWarning();
 			}
 		}
 
@@ -58,7 +58,7 @@ namespace EmailWPF.UC {
 		private void showMultipleLoginWarning() {
 			LoginCredentialsWarningTB.Text = "Cannot log in to an account more than once!";
 		}
-		private void showWrongCredentials() {
+		private void showWrongCredentialsWarning() {
 			LoginCredentialsWarningTB.Text = "Wrong email or password!";
 		}
 		private void hideWrongCredentials(object sender, RoutedEventArgs e) {
@@ -66,8 +66,8 @@ namespace EmailWPF.UC {
 		}
 
 		public void doInitializationSequence() {
-			LoginEmailTB.Text = "johndoe@emailprovider.com";
-			LoginPasswordPB.Password = "testpassword";
+			LoginEmailTB.Text = "johndoe@organization.com";
+			LoginPasswordPB.Password = "organizationpassword";
 		}
 	}
 }
